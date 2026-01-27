@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minangluxe - Intelligent Menu</title>
+    <style>
+        :root {
+            --pink-primary: #ff4d94;
+            --pink-light: #fff0f6;
+            --dark-navy: #1a1f2b;
+            --gray-text: #888;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fdfdfd;
+            margin: 0;
+            padding: 20px;
+            color: var(--dark-navy);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 5%;
+            margin-bottom: 30px;
+        }
+
+        .logo { font-weight: bold; font-size: 24px; color: var(--dark-navy); }
+        .logo span { color: var(--pink-primary); }
+
+        .hero-section {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #f0f0f0;
+        }
+
+        .hero-text h1 { font-size: 32px; margin: 0; }
+        .hero-text h1 span { color: var(--pink-primary); font-style: italic; }
+        .hero-text p { color: var(--gray-text); margin-top: 10px; }
+
+        .search-box {
+            position: relative;
+            width: 50%;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 20px 30px;
+            border-radius: 50px;
+            border: 1px solid #eee;
+            background: #fffafa;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .btn-execute {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--dark-navy);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .live-result-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .live-label { color: var(--pink-primary); font-style: italic; font-weight: bold; font-size: 14px; }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid #f5f5f5;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        .badge-row { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .badge { font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .badge.best-deal { background: var(--pink-light); color: var(--pink-primary); padding: 5px 10px; border-radius: 10px; }
+        .badge.quote { color: #ccc; }
+
+        .menu-card h3 { margin: 0; font-size: 22px; color: #333; }
+        .store-name { color: var(--pink-primary); font-size: 12px; margin: 10px 0 30px; font-style: italic; }
+
+        .price-tag { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #1a1f2b; }
+
+        .btn-finalize {
+            width: 100%;
+            padding: 15px;
+            background: var(--dark-navy);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo">M <span>Minangluxe<span>.</span></span></div>
+        <div style="font-size: 12px; color: var(--gray-text);">MARKETPLACE &nbsp;&nbsp; BIDDING HISTORY</div>
+    </div>
+
+    <div class="hero-section">
+        <div class="hero-text">
+            <h1>Identify Your<br><span>Best Deals</span></h1>
+            <p>Find the lowest bidding price instantly.</p>
+        </div>
+        <div class="search-box">
+            <input type="text" id="smartInput" placeholder="Describe your craving... e.g. spicy but cheap" oninput="filterMenu()">
+            <button class="btn-execute">EXECUTE AUCTION</button>
+        </div>
+    </div>
+
+    <div class="live-result-header">
+        <div class="live-label">LIVE RESULT</div>
+        <div id="itemCount" style="color: var(--pink-primary); font-size: 11px; background: var(--pink-light); padding: 5px 10px; border-radius: 20px; font-weight: bold;">
+            7 ITEMS LOADED
+        </div>
+    </div>
+
+    <div class="menu-grid" id="menuContainer">
+        </div>
+
+<script>
+    const menus = [
+        { name: "Nasi Sayur + Telur Dadar", price: 12000, taste: "salty", level: "cheap", store: "via Minangluxe Premium Store" },
+        { name: "Nasi Sayur + Perkedel", price: 13000, taste: "salty", level: "cheap", store: "via Minangluxe Premium Store" },
+        { name: "Nasi Ayam Goreng Serundeng", price: 15000, taste: "salty", level: "cheap", store: "via Minangluxe Premium Store" },
+        { name: "Rendang Daging Spesial", price: 28000, taste: "spicy", level: "expensive", store: "via Minangluxe Gold Store" },
+        { name: "Dendeng Balado", price: 26000, taste: "spicy", level: "expensive", store: "via Minangluxe Gold Store" },
+        { name: "Telur Balado Pedas", price: 11000, taste: "spicy", level: "cheap", store: "via Minangluxe Lite Store" },
+        { name: "Sate Padang Pariaman", price: 30000, taste: "spicy", level: "expensive", store: "via Minangluxe Gold Store" }
+    ];
+
+    function filterMenu() {
+        const input = document.getElementById('smartInput').value.toLowerCase();
+        
+        const filtered = menus.filter(item => {
+            if (input === "") return true;
+
+            const matchSpicy = input.includes("spicy") || input.includes("pedas");
+            const matchSalty = input.includes("salty") || input.includes("asin");
+            const matchCheap = input.includes("cheap") || input.includes("murah");
+            const matchExpensive = input.includes("expensive") || input.includes("mahal");
+
+            // Logika Kombinasi (Contoh: "spicy but cheap")
+            if ((matchSpicy || matchSalty) && (matchCheap || matchExpensive)) {
+                const tasteReq = matchSpicy ? "spicy" : "salty";
+                const priceReq = matchCheap ? "cheap" : "expensive";
+                return item.taste === tasteReq && item.level === priceReq;
+            }
+
+            // Logika Single Keyword
+            if (matchSpicy && item.taste === "spicy") return true;
+            if (matchSalty && item.taste === "salty") return true;
+            if (matchCheap && item.level === "cheap") return true;
+            if (matchExpensive && item.level === "expensive") return true;
+
+            // Pencarian Nama Biasa
+            return item.name.toLowerCase().includes(input);
+        });
+
+        renderCards(filtered);
+    }
+
+    function renderCards(data) {
+        const container = document.getElementById('menuContainer');
+        document.getElementById('itemCount').innerText = `${data.length} ITEMS LOADED`;
+        container.innerHTML = '';
+
+        data.forEach(item => {
+            container.innerHTML += `
+                <div class="menu-card">
+                    <div class="badge-row">
+                        <span class="badge best-deal">BEST DEAL</span>
+                        <span class="badge quote">BEST QUOTE</span>
+                    </div>
+                    <h3>${item.name}</h3>
+                    <p class="store-name">${item.store}</p>
+                    <div class="price-tag">IDR ${item.price.toLocaleString()}</div>
+                    <button class="btn-finalize">FINALIZE ORDER</button>
+                </div>
+            `;
+        });
+    }
+
+    // Inisialisasi
+    renderCards(menus);
+</script>
+</body>
+</html>
