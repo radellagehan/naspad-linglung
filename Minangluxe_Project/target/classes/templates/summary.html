@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ringkasan Pesanan</title>
+</head>
+<body style="font-family: monospace; text-align: center; padding-top: 50px;">
+    <h2>STRUK PESANAN</h2>
+    <hr style="width: 300px">
+    <div th:each="e : ${orders}" style="width: 300px; margin: auto; display: flex; justify-content: space-between;">
+        <span th:text="${e.key}"></span>
+        <span th:text="'x' + ${e.value}"></span>
+    </div>
+    <hr style="width: 300px">
+    <p>PESANAN SEDANG DIPROSES</p>
+    <a href="/">Balik ke Menu</a>
+</body>
+</html>

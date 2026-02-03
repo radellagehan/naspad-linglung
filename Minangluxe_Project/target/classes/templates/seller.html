@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MinangLuxe | Seller</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7fe; padding: 30px; }
+        .trigger-card { background: white; padding: 25px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); max-width: 600px; }
+        .input-group { display: flex; gap: 10px; margin-top: 15px; }
+        input[type="text"] { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        button { background: #ff4d94; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>🔔 Live Requests</h2>
+    <div th:if="${#lists.isEmpty(triggers)}"><p>No active requests. Wait for customers...</p></div>
+    <div th:each="t : ${triggers}" class="trigger-card">
+        <p>Customer is searching for: <b th:text="${t.keyword}" style="font-size: 20px; color: #1a1f2b;"></b></p>
+        <form th:action="@{/seller/respond}" method="post">
+            <input type="hidden" name="triggerId" th:value="${t.id}">
+            <input type="hidden" name="keyword" th:value="${t.keyword}">
+            <div class="input-group">
+                <input type="text" name="s1" placeholder="Recommendation 1" required>
+                <input type="text" name="s2" placeholder="Recommendation 2">
+                <input type="text" name="s3" placeholder="Recommendation 3">
+                <button type="submit">SAVE & PUSH</button>
+            </div>
+        </form>
+        <form th:action="@{/seller/clear}" method="post" style="margin-bottom: 20px;">
+    <button type="submit" style="background: gray; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer;">
+        HAPUS SEMUA REQUEST
+    </button>
+</form>
+    </div>
+</body>
+</html>

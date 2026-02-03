@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MinangLuxe | Order</title>
+    <meta th:if="${keyword != null and customRecs == null}" http-equiv="refresh" content="3">
+    <style>
+        :root { --pink: #ff4d94; --navy: #1a1f2b; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fdfdfd; margin: 0; padding: 20px; color: var(--navy); }
+        .container { max-width: 600px; margin: auto; }
+        .search-box { width: 100%; padding: 18px; border-radius: 35px; border: 2px solid #eee; font-size: 16px; outline: none; box-sizing: border-box; }
+        .search-box:focus { border-color: var(--pink); box-shadow: 0 0 15px rgba(255,77,148,0.2); }
+        .card { background: white; padding: 20px; border-radius: 20px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
+        .rec-box { background: #fff0f6; border: 2px dashed var(--pink); padding: 20px; border-radius: 20px; margin-top: 25px; }
+        .btn-pay { background: var(--navy); color: white; width: 100%; padding: 18px; border: none; border-radius: 15px; margin-top: 25px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .qty { width: 60px; padding: 8px; text-align: center; border-radius: 8px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align:center;">Minang<span style="color:var(--pink)">Luxe.</span></h1>
+        
+       <form th:action="@{/}" method="get" style="display: flex; gap: 10px; align-items: center;">
+    <input type="text" name="keyword" th:value="${keyword}" class="search-box" placeholder="Cari: pedas, murah, ayam..." style="flex: 1;">
+    
+    <a th:if="${keyword != null and keyword != ''}" th:href="@{/}" 
+       style="text-decoration: none; background: #eee; color: #555; padding: 15px 25px; border-radius: 30px; font-weight: bold; font-size: 14px;">
+       RESET
+    </a>
+</form>
+
+        <p th:text="${aiStatus}" style="text-align:center; color:var(--pink); font-weight:bold; margin-top: 20px;"></p>
+
+        <form th:action="@{/order/finalize}" method="post">
+            
+            <div th:if="${customRecs}" class="rec-box">
+                <h3 style="margin:0 0 15px 0; color: var(--pink);">🔥 Rekomendasi Chef:</h3>
+                <div th:each="rec : ${customRecs}" class="card" style="box-shadow:none; border-bottom: 1px solid #ffd1e3;">
+                    <span th:text="${rec}" style="font-weight:bold;"></span>
+                    <input type="number" th:name="${rec}" value="0" min="0" class="qty">
+                </div>
+            </div>
+
+            <div th:each="m : ${menuList}" class="card">
+                <div>
+                    <b th:text="${m.namaMenu}"></b><br>
+                    <small th:text="'Rp ' + ${m.harga}" style="color:#888"></small>
+                </div>
+                <input type="number" th:name="${m.namaMenu}" value="0" min="0" class="qty">
+            </div>
+            
+            <button type="submit" class="btn-pay">PESAN SEKARANG</button>
+        </form>
+    </div>
+</body>
+</html>
