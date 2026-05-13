@@ -1,0 +1,21 @@
+# TODO - Tercekik Syarat Tender (need→solusi, quantity, budget per item)
+
+- [x] Create model: TenderRequirement
+- [x] Create util: RequirementValidator (basic budget+qty checks)
+- [ ] Implement OrderParser upgrade:
+  - parse qty patterns termasuk "2 hot 3"
+  - parse budget patterns termasuk "3x21k"
+  - add output keys: qtyTotal/qtyHot/budgetTotal/budgetPerItem/need (jika ada)
+- [ ] Wire requirement through TenderController + BuyerPanel:
+  - parse req from tender_requests.query when adding offers to cart
+  - disable/annotate Add button if offer not valid (using RequirementValidator)
+- [ ] Need→solusi (menu A/B/C) minimal deterministic mapping:
+  - generate 3 menu options from need
+  - show confirm in TenderFrame
+  - persist selected menu in query string (tag)
+- [ ] (Opsional untuk validasi paket/berat yang benar) upgrade DB schema:
+  - tambah kolom paket/berat ke tender_offers
+  - update SellerInputCard UI + persist
+- [ ] Add unit tests untuk OrderParser parsing contoh:
+  - "Need package S2, weight 500gr, budget 20k, 2 hot 3, 3x21k"
+- [ ] Run mvn test / run app smoke test
